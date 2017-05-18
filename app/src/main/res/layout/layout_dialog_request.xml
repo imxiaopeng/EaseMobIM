@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:padding="2dp"
+        android:background="#e7ffffff"
+        android:id="@+id/ll_newMsg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收到新的好友申请："
+            />
+        <TextView
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jack"
+            />
+        <Button
+            android:layout_margin="5dp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_selector"
+            android:text="同意"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="accept"
+            />
+        <Button
+            android:layout_margin="5dp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_selector"
+            android:text="拒绝"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="disAccept"
+            />
+    </LinearLayout>
+
+</LinearLayout>
