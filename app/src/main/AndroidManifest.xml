@@ -65,7 +65,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatActivity" />
-        <activity android:name=".ECChatActivity" android:launchMode="singleTop"/>
+        <activity android:name=".ECChatActivity" android:launchMode="singleTask"/>
         <activity android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity" />
         <activity android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity" />
     </application>
