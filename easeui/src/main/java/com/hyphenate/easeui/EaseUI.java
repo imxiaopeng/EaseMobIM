@@ -152,6 +152,7 @@ public final class EaseUI {
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
                 EaseAtMessageHelper.get().parseMessages(messages);
+                notifier.onNewMesg(messages);
             }
             @Override
             public void onMessageRead(List<EMMessage> messages) {
@@ -194,7 +195,7 @@ public final class EaseUI {
     
     /**
      * set user profile provider
-     * @param provider
+     * @param
      */
     public void setUserProfileProvider(EaseUserProfileProvider userProvider){
         this.userProvider = userProvider;

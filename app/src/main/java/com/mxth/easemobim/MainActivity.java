@@ -1,5 +1,6 @@
 package com.mxth.easemobim;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +31,11 @@ import com.hyphenate.chat.EMContactManager;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.model.EaseNotifier;
+import com.hyphenate.easeui.ui.EaseChatFragment;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.exceptions.HyphenateException;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +43,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hyphenate.easeui.utils.EaseUserUtils.getUserInfo;
 import static com.mxth.easemobim.R.id.ll_newMsg;
 
 
@@ -47,11 +54,69 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private TextView tv_msg;
     private List<String> users;
+    private Context appContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appContext = this;
+        EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
+            @Override
+            public EaseUser getUser(String username) {
+                EaseUser user = new EaseUser(username);
+                user.setAvatar("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png");
+                return user;
+            }
+        });
+        EaseUI.getInstance().getNotifier().setNotificationInfoProvider(new EaseNotifier.EaseNotificationInfoProvider() {
+
+            @Override
+            public String getTitle(EMMessage message) {
+                //修改标题,这里使用默认
+                return null;
+            }
+
+            @Override
+            public int getSmallIcon(EMMessage message) {
+                //设置小图标，这里为默认
+                return 0;
+            }
+
+            @Override
+            public String getDisplayedText(EMMessage message) {
+                // 设置状态栏的消息提示，可以根据message的类型做相应提示
+                String ticker = EaseCommonUtils.getMessageDigest(message, appContext);
+                if(message.getType() == EMMessage.Type.TXT){
+                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
+                }
+                EaseUser user = getUserInfo(message.getFrom());
+                if(user != null){
+                    return getUserInfo(message.getFrom()).getNick() + ": " + ticker;
+                }else{
+                    return message.getFrom() + ": " + ticker;
+                }
+            }
+
+            @Override
+            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
+                return null;
+                // return fromUsersNum + "个基友，发来了" + messageNum + "条消息";
+            }
+
+            @Override
+            public Intent getLaunchIntent(EMMessage message) {
+                //设置点击通知栏跳转事件
+                Intent intent = new Intent(appContext, ECChatActivity.class);
+                //有电话时优先跳转到通话页面
+                    EMMessage.ChatType chatType = message.getChatType();
+                    if (chatType == EMMessage.ChatType.Chat) { // 单聊信息
+                        intent.putExtra("userId", message.getFrom());
+                        intent.putExtra(EaseConstant.EXTRA_CHAT_TYPE,EaseConstant.CHATTYPE_SINGLE);
+                    }
+                return intent;
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
@@ -417,12 +482,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new Thread() {
+        /*new Thread() {
             @Override
             public void run() {
                 EMClient.getInstance().logout(true);
             }
-        }.start();
+        }.start();*/
         super.onBackPressed();
     }
 }

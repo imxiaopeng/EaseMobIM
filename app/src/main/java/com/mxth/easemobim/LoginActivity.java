@@ -43,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+        if(EMClient.getInstance().isConnected()){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
 //        etAccount.setText("1312377666");
 //        etPwd.setText("123456");
     }
